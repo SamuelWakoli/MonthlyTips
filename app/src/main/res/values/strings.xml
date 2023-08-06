@@ -34,13 +34,13 @@
 
 
     <!--    Descriptions-->
-    <string name="description_1">Plan your code's structure before diving in. Organized code is easier to maintain and understand.</string>
+    <string name="description_1">Plan your code\'s structure before diving in. Organized code is easier to maintain and understand.</string>
     <string name="description_2">Use version control tools like Git to track changes, collaborate, and roll back when needed.</string>
     <string name="description_3">Become proficient in a debugging tool like breakpoints or logging to identify and fix issues faster.</string>
     <string name="description_4">Limit functions to a single responsibility. Shorter functions are easier to comprehend and reuse.</string>
-    <string name="description_5">Write code that's easy to read. Prioritize clarity over cleverness.</string>
+    <string name="description_5">Write code that\'s easy to read. Prioritize clarity over cleverness.</string>
     <string name="description_6">Regularly explore a new language feature to broaden your skillset.</string>
-    <string name="description_7">Deepen your understanding of data structures; they're crucial for efficient algorithms.</string>
+    <string name="description_7">Deepen your understanding of data structures; they\'re crucial for efficient algorithms.</string>
     <string name="description_8">Adhere to naming conventions to create consistent and understandable codebase.</string>
     <string name="description_9">Write tests as you code. They ensure your code behaves as expected and guards against regressions.</string>
     <string name="description_10">Try new frameworks to broaden your toolset and improve your problem-solving skills.</string>
@@ -52,11 +52,11 @@
     <string name="description_16">Efficiently navigate your IDE using keyboard shortcuts. It saves time and boosts productivity.</string>
     <string name="description_17">Understand memory management to avoid memory leaks and optimize performance.</string>
     <string name="description_18">Stay up-to-date by experimenting with new tools, libraries, and techniques.</string>
-    <string name="description_19">Strive for efficient algorithms to improve your code's runtime performance.</string>
+    <string name="description_19">Strive for efficient algorithms to improve your code\'s runtime performance.</string>
     <string name="description_20">Pair programming fosters collaboration, knowledge sharing, and code quality.</string>
-    <string name="description_21">Study open-source projects to learn from experienced developers' code.</string>
+    <string name="description_21">Study open-source projects to learn from experienced developers\' code.</string>
     <string name="description_22">Break down complex tasks into smaller, manageable functions.</string>
-    <string name="description_23">Implement error handling to ensure your program doesn't crash unexpectedly.</string>
+    <string name="description_23">Implement error handling to ensure your program doesn\'t crash unexpectedly.</string>
     <string name="description_24">Learn the concepts of functional programming and apply them where suitable.</string>
     <string name="description_25">Keep up with the latest technologies and trends to remain relevant in the industry.</string>
     <string name="description_26">Work with APIs to integrate external services into your applications.</string>

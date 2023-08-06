@@ -4,7 +4,7 @@ import com.sam.monthlytips.R
 import com.sam.monthlytips.model.Tip
 
 class TipData() {
-    fun getTips(): List<Tip> = listOf(
+    fun loadTips(): List<Tip> = listOf(
             Tip(imageID = R.drawable.img1, dayNumber = 1, title = R.string.title_1, description = R.string.description_1),
             Tip(imageID = R.drawable.img2, dayNumber = 2, title = R.string.title_2, description = R.string.description_2),
             Tip(imageID = R.drawable.img3, dayNumber = 3, title = R.string.title_3, description = R.string.description_3),
