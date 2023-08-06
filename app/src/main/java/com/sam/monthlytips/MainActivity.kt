@@ -24,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -81,7 +80,6 @@ fun HomeTopAppbar() {
             title = {
                 Text(text = "30 Days Of Wellness")
             },
-            scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior() //hides the appbar on pulling content up
     )
 }
 
@@ -94,7 +92,7 @@ fun CardListItem(modifier: Modifier, tip: Tip) {
             onClick = { expanded = !expanded },
             modifier = modifier.animateContentSize(
                     spring(
-                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            dampingRatio = Spring.DampingRatioLowBouncy,
                             stiffness = Spring.StiffnessLow
                     )
             ),
@@ -109,7 +107,7 @@ fun CardListItem(modifier: Modifier, tip: Tip) {
 @Composable
 fun CardHeader(day: Int, title: Int, modifier: Modifier) {
     Row {
-        Column(modifier = modifier) {
+        Column(modifier = modifier.fillMaxWidth()) {
             Text(text = "Day $day", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
             Text(text = stringResource(id = title), style = MaterialTheme.typography.titleMedium)
         }
@@ -129,19 +127,20 @@ fun CardHeaderPrev() {
 fun CardBody(
         imageID: Int,
         description: Int,
-        expanded: Boolean = false,
+        expanded: Boolean,
 ) {
-    Column {
-        if (expanded) Text(modifier = Modifier.padding(horizontal = 16.dp), text = stringResource(id = description))
-        if (expanded) Spacer(modifier = Modifier.height(4.dp))
-        Image(modifier = Modifier
-                .height(180.dp)
-                .fillMaxWidth()
-                .clip(shape = MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop,
-                painter = painterResource(id = imageID),
-                contentDescription = null)
-    }
+    if (expanded)
+        Column {
+            Text(modifier = Modifier.padding(horizontal = 16.dp), text = stringResource(id = description))
+            Spacer(modifier = Modifier.height(4.dp))
+            Image(modifier = Modifier
+                    .height(180.dp)
+                    .fillMaxWidth()
+                    .clip(shape = MaterialTheme.shapes.medium),
+                    contentScale = ContentScale.Crop,
+                    painter = painterResource(id = imageID),
+                    contentDescription = null)
+        }
 }
 
 @Preview(showBackground = true)
