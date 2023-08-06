@@ -4,8 +4,12 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,12 +24,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -40,7 +46,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MonthlyTipsTheme {
+            MonthlyTipsTheme(dynamicColor = true) {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
                     TipsApp()
@@ -56,10 +62,13 @@ class MainActivity : ComponentActivity() {
 fun TipsApp() {
     val tips: List<Tip> = TipData().loadTips()
 
-    Scaffold(topBar = { HomeTopAppbar() }) {
-        LazyColumn {
+    Scaffold(topBar = { HomeTopAppbar() }) { it ->
+        LazyColumn(
+                contentPadding = it,
+                modifier = Modifier.fillMaxSize(),
+        ) {
             items(tips) {
-                CardListItem(tip = it)
+                CardListItem(tip = it, modifier = Modifier.padding(4.dp))
             }
         }
     }
@@ -72,27 +81,39 @@ fun HomeTopAppbar() {
             title = {
                 Text(text = "30 Days Of Wellness")
             },
+            scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior() //hides the appbar on pulling content up
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CardListItem(tip: Tip) {
+fun CardListItem(modifier: Modifier, tip: Tip) {
     var expanded by remember { mutableStateOf(false) }
 
-    Card(onClick = { expanded = !expanded }) {
+    Card(
+            onClick = { expanded = !expanded },
+            modifier = modifier.animateContentSize(
+                    spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
+                    )
+            ),
+    ) {
         Column {
-            CardHeader(day = tip.dayNumber, title = tip.title)
+            CardHeader(day = tip.dayNumber, title = tip.title, modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp))
             CardBody(imageID = tip.imageID, description = tip.description, expanded = expanded)
         }
     }
 }
 
 @Composable
-fun CardHeader(day: Int, title: Int, modifier: Modifier = Modifier) {
-    Column(modifier = modifier) {
-        Text(text = "Day $day", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
-        Text(text = stringResource(id = title), style = MaterialTheme.typography.titleMedium)
+fun CardHeader(day: Int, title: Int, modifier: Modifier) {
+    Row {
+        Column(modifier = modifier) {
+            Text(text = "Day $day", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+            Text(text = stringResource(id = title), style = MaterialTheme.typography.titleMedium)
+        }
+
     }
 }
 
@@ -106,19 +127,20 @@ fun CardHeaderPrev() {
 
 @Composable
 fun CardBody(
-        modifier: Modifier = Modifier,
         imageID: Int,
         description: Int,
         expanded: Boolean = false,
 ) {
-    Column(modifier = Modifier
-            .padding(4.dp)
-            .then(modifier)) {
+    Column {
+        if (expanded) Text(modifier = Modifier.padding(horizontal = 16.dp), text = stringResource(id = description))
+        if (expanded) Spacer(modifier = Modifier.height(4.dp))
         Image(modifier = Modifier
                 .height(180.dp)
-                .fillMaxWidth(), contentScale = ContentScale.Crop, painter = painterResource(id = imageID), contentDescription = null)
-        Spacer(modifier = Modifier.height(4.dp))
-        if (expanded) Text(text = stringResource(id = description))
+                .fillMaxWidth()
+                .clip(shape = MaterialTheme.shapes.medium),
+                contentScale = ContentScale.Crop,
+                painter = painterResource(id = imageID),
+                contentDescription = null)
     }
 }
 
