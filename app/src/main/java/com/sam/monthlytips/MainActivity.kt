@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -32,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,7 +51,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             MonthlyTipsTheme(dynamicColor = true) {
                 // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
                     TipsApp()
                 }
             }
@@ -60,11 +67,24 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun TipsApp() {
     val tips: List<Tip> = TipData().loadTips()
+    val configuration = LocalConfiguration.current
+
+    val screenWidth = configuration.screenWidthDp.dp
+
 
     Scaffold(topBar = { HomeTopAppbar() }) { it ->
-        LazyColumn(
+        if (screenWidth < 600.dp) {
+            LazyColumn(
                 contentPadding = it,
                 modifier = Modifier.fillMaxSize(),
+            ) {
+                items(tips) {
+                    CardListItem(tip = it, modifier = Modifier.padding(4.dp))
+                }
+            }
+        } else LazyVerticalGrid(
+            contentPadding = it,
+            columns = GridCells.Adaptive(minSize = 300.dp)
         ) {
             items(tips) {
                 CardListItem(tip = it, modifier = Modifier.padding(4.dp))
@@ -77,9 +97,9 @@ fun TipsApp() {
 @Composable
 fun HomeTopAppbar() {
     CenterAlignedTopAppBar(
-            title = {
-                Text(text = "30 Days Of Wellness")
-            },
+        title = {
+            Text(text = stringResource(R.string.home_appbar_title))
+        },
     )
 }
 
@@ -89,16 +109,20 @@ fun CardListItem(modifier: Modifier, tip: Tip) {
     var expanded by remember { mutableStateOf(false) }
 
     Card(
-            onClick = { expanded = !expanded },
-            modifier = modifier.animateContentSize(
-                    spring(
-                            dampingRatio = Spring.DampingRatioLowBouncy,
-                            stiffness = Spring.StiffnessLow
-                    )
-            ),
+        onClick = { expanded = !expanded },
+        modifier = modifier.animateContentSize(
+            spring(
+                dampingRatio = Spring.DampingRatioLowBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
     ) {
         Column {
-            CardHeader(day = tip.dayNumber, title = tip.title, modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp))
+            CardHeader(
+                day = tip.dayNumber,
+                title = tip.title,
+                modifier = Modifier.padding(vertical = 4.dp, horizontal = 16.dp)
+            )
             CardBody(imageID = tip.imageID, description = tip.description, expanded = expanded)
         }
     }
@@ -108,7 +132,11 @@ fun CardListItem(modifier: Modifier, tip: Tip) {
 fun CardHeader(day: Int, title: Int, modifier: Modifier) {
     Row {
         Column(modifier = modifier.fillMaxWidth()) {
-            Text(text = "Day $day", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold)
+            Text(
+                text = stringResource(R.string.day, day),
+                style = MaterialTheme.typography.bodySmall,
+                fontWeight = FontWeight.Bold
+            )
             Text(text = stringResource(id = title), style = MaterialTheme.typography.titleMedium)
         }
 
@@ -118,35 +146,50 @@ fun CardHeader(day: Int, title: Int, modifier: Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun CardHeaderPrev() {
-    val tipData = Tip(title = R.string.title_1, description = R.string.description_1, dayNumber = 1, imageID = R.drawable.img1)
+    val tipData = Tip(
+        title = R.string.title_1,
+        description = R.string.description_1,
+        dayNumber = 1,
+        imageID = R.drawable.img1
+    )
     CardHeader(tipData.dayNumber, title = tipData.title, modifier = Modifier.padding(4.dp))
 }
 
 
 @Composable
 fun CardBody(
-        imageID: Int,
-        description: Int,
-        expanded: Boolean,
+    imageID: Int,
+    description: Int,
+    expanded: Boolean,
 ) {
     if (expanded)
         Column {
-            Text(modifier = Modifier.padding(horizontal = 16.dp), text = stringResource(id = description))
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = stringResource(id = description)
+            )
             Spacer(modifier = Modifier.height(4.dp))
-            Image(modifier = Modifier
+            Image(
+                modifier = Modifier
                     .height(180.dp)
                     .fillMaxWidth()
                     .clip(shape = MaterialTheme.shapes.medium),
-                    contentScale = ContentScale.Crop,
-                    painter = painterResource(id = imageID),
-                    contentDescription = null)
+                contentScale = ContentScale.Crop,
+                painter = painterResource(id = imageID),
+                contentDescription = null
+            )
         }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun CardBodyPrev() {
-    val tipData = Tip(title = R.string.title_1, description = R.string.description_1, dayNumber = 1, imageID = R.drawable.img1)
+    val tipData = Tip(
+        title = R.string.title_1,
+        description = R.string.description_1,
+        dayNumber = 1,
+        imageID = R.drawable.img1
+    )
 
     CardBody(imageID = tipData.imageID, description = tipData.description, expanded = true)
 }

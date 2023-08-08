@@ -64,4 +64,6 @@
     <string name="description_28">Enhance your UI/UX skills to create user-friendly and visually appealing applications.</string>
     <string name="description_29">Contribute to open-source projects to gain experience and give back to the community.</string>
     <string name="description_30">Reflect on your progress, identify areas for improvement, and plan your future programming goals.</string>
+    <string name="home_appbar_title">30 Days Of Wellness</string>
+    <string name="day">Day %1$s</string>
 </resources>
